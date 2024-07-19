@@ -1,4 +1,4 @@
-module github.com/siddarthpai/distributedkvp
+module github.com/siddarthpai/distributedkvdb
 
 go 1.22.3
 

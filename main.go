@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/siddarthpai/distributedkvp/db"
+	"github.com/siddarthpai/distributedkvdb/db"
 )
 
 var (
