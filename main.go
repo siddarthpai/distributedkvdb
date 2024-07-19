@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	bolt "go.etcd.io/bbolt"
+	"github.com/siddarthpai/distributedkvp/db"
 )
 
 var (
@@ -23,11 +23,12 @@ func parseFlags() { //function to validate
 }
 func main() {
 	parseFlags()
-	db, err := bolt.Open(*dbLocation, 0600, nil)
+
+	db, close, err := db.NewDatabase(*dbLocation)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("error creating NewDatabase(%q): %v", *dbLocation, err)
 	}
-	defer db.Close()
+	defer close()
 
 	http.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "called get!")
