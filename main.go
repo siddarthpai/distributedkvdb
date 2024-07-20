@@ -37,7 +37,7 @@ func main() {
 		value, err := db.GetKey(key)
 
 		fmt.Fprint(w, "called get!")
-		fmt.Fprint(w, "Value = %q, error = %v", value, err)
+		fmt.Fprintf(w, "Value = %q, error = %v", value, err)
 	})
 
 	http.HandleFunc("/set", func(w http.ResponseWriter, r *http.Request) {
@@ -48,7 +48,7 @@ func main() {
 		err := db.SetKey(key, []byte(value))
 
 		fmt.Fprint(w, "called set!")
-		fmt.Fprint(w, "error = %v", err)
+		fmt.Fprintf(w, "error = %v", err)
 	})
 
 	log.Fatal(http.ListenAndServe(*httpAddr, nil))
