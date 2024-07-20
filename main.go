@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/siddarthpai/distributedkvdb/db"
+	"github.com/siddarthpai/distributedkvdb/webhandler"
 )
 
 var (
@@ -31,25 +31,10 @@ func main() {
 	}
 	defer close()
 
-	http.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		key := r.Form.Get("key")
-		value, err := db.GetKey(key)
+	server := webhandler.NewServer(db)
+	http.HandleFunc("/get", server.GetHandler)
 
-		fmt.Fprint(w, "called get!")
-		fmt.Fprintf(w, "Value = %q, error = %v", value, err)
-	})
+	http.HandleFunc("/set", server.SetHandler)
 
-	http.HandleFunc("/set", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		key := r.Form.Get("key")
-		value := r.Form.Get("value")
-
-		err := db.SetKey(key, []byte(value))
-
-		fmt.Fprint(w, "called set!")
-		fmt.Fprintf(w, "error = %v", err)
-	})
-
-	log.Fatal(http.ListenAndServe(*httpAddr, nil))
+	log.Fatal(server.ListenAndServe(*httpAddr))
 }
